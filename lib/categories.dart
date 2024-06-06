@@ -7,7 +7,11 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wybierz kategorię'),
+        backgroundColor: Colors.black26,
+        title: Text(
+          'Wybierz kategorię',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: GridView(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
