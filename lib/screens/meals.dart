@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:ksiazkakucharska/models/meal.dart';
+import 'package:ksiazkakucharska/screens/meal_detail.dart';
+import 'package:ksiazkakucharska/widgets/meat_item.dart';
 
 class MealScreen extends StatelessWidget {
   const MealScreen({super.key, required this.title, required this.meals});
 
   final String title;
   final List<Meal> meals;
+
+  void _selectMeal(BuildContext context, Meal meal) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MealDetailsScreen(
+          meal: meal,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +47,18 @@ class MealScreen extends StatelessWidget {
     );
     if (meals.isNotEmpty) {
       content = ListView.builder(
-        itemCount: meals.length,
-        itemBuilder: (context, index) => Text(
-          meals[index].title,
-        ),
-      );
+          itemCount: meals.length,
+          itemBuilder: (context, index) => MealItem(
+                meal: meals[index],
+                onSelectMeal: (meal) {
+                  _selectMeal(context, meal);
+                },
+              ));
     }
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.black26,
+          foregroundColor: Colors.white,
           title: Text(title),
         ),
         body: content);
