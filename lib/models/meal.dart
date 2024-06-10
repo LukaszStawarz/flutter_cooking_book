@@ -1,13 +1,13 @@
 enum Complexity {
-  simple,
-  challenging,
-  hard,
+  proste,
+  wymagajace,
+  trudne,
 }
 
 enum Affordability {
-  affordable,
-  pricey,
-  luxurious,
+  tanie,
+  kosztowne,
+  drogie,
 }
 
 class Meal {

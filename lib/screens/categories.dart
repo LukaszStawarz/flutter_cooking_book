@@ -3,6 +3,7 @@ import 'package:ksiazkakucharska/data/dummy_data.dart';
 import 'package:ksiazkakucharska/models/category.dart';
 import 'package:ksiazkakucharska/screens/meals.dart';
 import 'package:ksiazkakucharska/widgets/category_grid_item.dart';
+import 'package:ksiazkakucharska/widgets/side_bar.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
@@ -26,12 +27,14 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: Colors.black26,
         title: const Text(
           'Wybierz kategorię',
           style: TextStyle(color: Colors.white),
         ),
       ),
+      drawer: SideBarWidget(),
       body: GridView(
         padding: const EdgeInsets.all(15),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
