@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:ksiazkakucharska/models/category.dart';
 import 'package:ksiazkakucharska/models/meal.dart';
-import 'package:ksiazkakucharska/models/provider.dart';
+import 'package:ksiazkakucharska/providers/meal_settings_provider.dart';
 import 'package:ksiazkakucharska/screens/meal_detail.dart';
 import 'package:ksiazkakucharska/widgets/meat_item.dart';
 import 'package:provider/provider.dart';
 
-class MealScreen extends StatelessWidget {
-  const MealScreen({super.key, required this.title, required this.meals});
+import '../providers/meal_provider.dart';
 
-  final String title;
-  final List<Meal> meals;
+class MealScreen extends StatelessWidget {
+  const MealScreen({
+    super.key,
+    required this.category,
+  });
+
+  final Category category;
 
   void _selectMeal(BuildContext context, Meal meal) {
     Navigator.of(context).push(
@@ -23,72 +28,76 @@ class MealScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<MealsSettingsProvider>();
+    final settingsProvider = context.watch<MealsSettingsProvider>();
 
-    final visibleList = meals
-        .where((element) =>
-            //            1         +     0  = 1
-            (element.isGlutenFree && provider.glutenFreeFilterSet) ||
-            (element.isLactoseFree && provider.lactoseFreeFilterSet) ||
-            (element.isVegan && provider.veganFilterSet) ||
-            (element.isVegetarian && provider.vegetarianFilterSet))
+    // Odczytujemy dane z providera i nasluchujemy zmian
+    final mealsProvider = context.watch<MealProvider>();
+
+    // Odczytujemy liste meals z providera i filtrujemy po kategorii
+    final List<Meal> filteredByCategoryMeals = mealsProvider.meals
+        .where(
+          (meal) => meal.categories.contains(category.id),
+        )
         .toList();
 
-    print(meals.length);
-    print('----');
-    print(visibleList.length);
+    final mealsFilteredBySettings = filteredByCategoryMeals
+        .where((element) =>
+            //            1         +         0     =      1
+            (element.isGlutenFree && settingsProvider.glutenFreeFilterSet) ||
+            (element.isLactoseFree && settingsProvider.lactoseFreeFilterSet) ||
+            (element.isVegan && settingsProvider.veganFilterSet) ||
+            (element.isVegetarian && settingsProvider.vegetarianFilterSet))
+        .toList();
 
-    Widget content = Center(
+    Widget content = const Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             'There is nothing here',
-            style: Theme.of(context)
-                .textTheme
-                .headlineLarge!
-                .copyWith(color: Theme.of(context).colorScheme.onBackground),
+            style: TextStyle(color: Colors.white54, fontSize: 30),
           ),
           SizedBox(
             height: 20,
           ),
           Text(
             'Select different category!',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(color: Theme.of(context).colorScheme.onBackground),
+            style: TextStyle(color: Colors.white54),
           )
         ],
       ),
     );
-    if (visibleList.isNotEmpty) {
+    if (mealsFilteredBySettings.isNotEmpty) {
       content = ListView.builder(
-        itemCount: visibleList.length,
+        itemCount: mealsFilteredBySettings.length,
         itemBuilder: (context, index) => MealItem(
-            meal: visibleList[index],
+            meal: mealsFilteredBySettings[index],
             onSelectMeal: (visibleList) {
               _selectMeal(context, visibleList);
             }),
       );
     }
 
-    if (visibleList.isEmpty && provider.isAnyFilterSet) {
-      return Center(
-        child: Text(
-          'Tutaj nie ma dan weganskich',
-          style: TextStyle(
-            color: Colors.yellow,
+    if (mealsFilteredBySettings.isEmpty && settingsProvider.isAnyFilterSet) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black26,
+          foregroundColor: Colors.white,
+          title: Text(
+            category.title,
           ),
         ),
+        body: content,
       );
     }
 
-    if (meals.isNotEmpty && visibleList.isEmpty && !provider.isAnyFilterSet) {
+    if (filteredByCategoryMeals.isNotEmpty &&
+        mealsFilteredBySettings.isEmpty &&
+        !settingsProvider.isAnyFilterSet) {
       content = ListView.builder(
-        itemCount: meals.length,
+        itemCount: filteredByCategoryMeals.length,
         itemBuilder: (context, index) => MealItem(
-          meal: meals[index],
+          meal: filteredByCategoryMeals[index],
           onSelectMeal: (meal) {
             _selectMeal(context, meal);
           },
@@ -100,9 +109,15 @@ class MealScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black26,
         foregroundColor: Colors.white,
-        title: Text(title),
+        title: Text(
+          category.title,
+        ),
       ),
-      body: content,
+      body: mealsProvider.isFetching
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : content,
     );
   }
 }

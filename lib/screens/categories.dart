@@ -1,23 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ksiazkakucharska/data/dummy_data.dart';
 import 'package:ksiazkakucharska/models/category.dart';
+import 'package:ksiazkakucharska/models/meal.dart';
+import 'package:ksiazkakucharska/providers/category_provider.dart';
+import 'package:ksiazkakucharska/providers/meal_provider.dart';
+import 'package:ksiazkakucharska/providers/meal_settings_provider.dart';
 import 'package:ksiazkakucharska/screens/meals.dart';
 import 'package:ksiazkakucharska/widgets/category_grid_item.dart';
 import 'package:ksiazkakucharska/widgets/side_bar.dart';
+import 'package:provider/provider.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
 
   void _selectCategory(BuildContext context, Category category) {
-    final filteredMeals = dummyMeals
-        .where((meal) => meal.categories.contains(category.id))
-        .toList();
-
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => MealScreen(
-          title: category.title,
-          meals: filteredMeals,
+          category: category,
         ),
       ),
     );
@@ -25,6 +26,9 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final categoryProvider = context.watch<CategoryProvider>();
+    final List<Category> filteredByCategory = categoryProvider.categories;
+
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
@@ -33,8 +37,25 @@ class CategoriesScreen extends StatelessWidget {
           'Wybierz kategorię',
           style: TextStyle(color: Colors.white),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
-      drawer: SideBarWidget(),
+      drawer: const SideBarWidget(),
       body: GridView(
         padding: const EdgeInsets.all(15),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -44,7 +65,7 @@ class CategoriesScreen extends StatelessWidget {
           mainAxisSpacing: 20,
         ),
         children: [
-          ...listOfCategories.map(
+          ...filteredByCategory.map(
             (category) => CategoryGridItemWidget(
               category: category,
               onSelectCategory: () {
@@ -52,8 +73,6 @@ class CategoriesScreen extends StatelessWidget {
               },
             ),
           ),
-          // for (final category in listOfCategories)
-          //   CategoryGridItemWidget(category: category)
         ],
       ),
     );

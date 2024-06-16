@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:ksiazkakucharska/models/provider.dart';
+import 'package:ksiazkakucharska/providers/meal_settings_provider.dart';
 import 'package:provider/provider.dart';
 
 enum Filter {
@@ -16,11 +14,11 @@ class SideBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: const Color.fromRGBO(33, 32, 44, 1),
+    return const Drawer(
+      backgroundColor: Color.fromRGBO(33, 32, 44, 1),
       child: Column(
         children: [
-          const DrawerHeader(
+          DrawerHeader(
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Color.fromRGBO(27, 26, 37, 0.922),
@@ -57,10 +55,10 @@ class FilterWidget extends StatefulWidget {
 }
 
 class _FilterWidgetState extends State<FilterWidget> {
-  var _glutenFreeFilterSet = false;
-  var _lactoseFreeFilterSet = false;
-  var _veganFilterSet = false;
-  var _vegetarianFilterSet = false;
+  final _glutenFreeFilterSet = false;
+  final _lactoseFreeFilterSet = false;
+  final _veganFilterSet = false;
+  final _vegetarianFilterSet = false;
 
   @override
   Widget build(BuildContext context) {
