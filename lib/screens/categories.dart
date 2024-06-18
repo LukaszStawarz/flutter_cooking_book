@@ -1,11 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ksiazkakucharska/data/dummy_data.dart';
 import 'package:ksiazkakucharska/models/category.dart';
-import 'package:ksiazkakucharska/models/meal.dart';
 import 'package:ksiazkakucharska/providers/category_provider.dart';
-import 'package:ksiazkakucharska/providers/meal_provider.dart';
-import 'package:ksiazkakucharska/providers/meal_settings_provider.dart';
+import 'package:ksiazkakucharska/screens/add_meal.dart';
 import 'package:ksiazkakucharska/screens/meals.dart';
 import 'package:ksiazkakucharska/widgets/category_grid_item.dart';
 import 'package:ksiazkakucharska/widgets/side_bar.dart';
@@ -22,6 +18,11 @@ class CategoriesScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _addItem(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AddMealScreen()));
   }
 
   @override
@@ -44,7 +45,9 @@ class CategoriesScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _addItem(context);
+                  },
                   icon: const Icon(
                     Icons.add,
                     size: 30,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ksiazkakucharska/models/meal.dart';
+import 'package:ksiazkakucharska/screens/add_meal.dart';
 
 class MealDetailsScreen extends StatelessWidget {
   const MealDetailsScreen({super.key, required this.meal});
@@ -17,16 +18,44 @@ class MealDetailsScreen extends StatelessWidget {
           meal.title,
           style: const TextStyle(color: Colors.white),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AddMealScreen(
+                      meal: meal,
+                    );
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.edit),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-              meal.imageUrl,
-              width: double.infinity,
-              height: 300,
-              fit: BoxFit.cover,
-            ),
+            if (meal.imageUrl != '')
+              Hero(
+                tag: '${meal.imageUrl}',
+                child: Image.network(
+                  meal.imageUrl,
+                  width: double.infinity,
+                  height: 300,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            if (meal.imageUrl == '')
+              Container(
+                height: 300,
+                color: Colors.white,
+                child: const Center(
+                  child: Text('Brak zdjęcia'),
+                ),
+              ),
             const SizedBox(
               height: 15,
             ),

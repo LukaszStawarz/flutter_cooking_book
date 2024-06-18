@@ -29,11 +29,7 @@ class MealScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settingsProvider = context.watch<MealsSettingsProvider>();
-
-    // Odczytujemy dane z providera i nasluchujemy zmian
     final mealsProvider = context.watch<MealProvider>();
-
-    // Odczytujemy liste meals z providera i filtrujemy po kategorii
     final List<Meal> filteredByCategoryMeals = mealsProvider.meals
         .where(
           (meal) => meal.categories.contains(category.id),
@@ -72,8 +68,8 @@ class MealScreen extends StatelessWidget {
         itemCount: mealsFilteredBySettings.length,
         itemBuilder: (context, index) => MealItem(
             meal: mealsFilteredBySettings[index],
-            onSelectMeal: (visibleList) {
-              _selectMeal(context, visibleList);
+            onSelectMeal: (selectedMeal) {
+              _selectMeal(context, selectedMeal);
             }),
       );
     }

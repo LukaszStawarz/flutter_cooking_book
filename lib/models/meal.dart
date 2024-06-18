@@ -8,10 +8,46 @@ enum Complexity {
   trudne,
 }
 
+class ComplexityMapper {
+  static Complexity mapStringToComplexity(String complexity) {
+    if (complexity == 'proste') {
+      return Complexity.proste;
+    }
+
+    if (complexity == 'wymagajace') {
+      return Complexity.wymagajace;
+    }
+
+    if (complexity == 'trudne') {
+      return Complexity.trudne;
+    }
+
+    return Complexity.proste;
+  }
+}
+
 enum Affordability {
   tanie,
   kosztowne,
   drogie,
+}
+
+class AffordabilityMapper {
+  static Affordability mapStringToAfforability(String affordability) {
+    if (affordability == 'tanie') {
+      return Affordability.tanie;
+    }
+
+    if (affordability == 'kosztowne') {
+      return Affordability.kosztowne;
+    }
+
+    if (affordability == 'drogie') {
+      return Affordability.drogie;
+    }
+
+    return Affordability.tanie;
+  }
 }
 
 @JsonSerializable()

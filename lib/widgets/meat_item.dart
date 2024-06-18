@@ -30,13 +30,26 @@ class MealItem extends StatelessWidget {
         },
         child: Stack(
           children: [
-            FadeInImage(
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-              fit: BoxFit.cover,
-              height: 200,
-              width: double.infinity,
-            ),
+            if (meal.imageUrl != '')
+              Hero(
+                tag: '${meal.imageUrl}',
+                child: FadeInImage(
+                  placeholder: MemoryImage(kTransparentImage),
+                  image: NetworkImage(meal.imageUrl),
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: double.infinity,
+                ),
+              ),
+            if (meal.imageUrl == '')
+              Container(
+                height: 200.0,
+                child: const Center(
+                  child: Text(
+                    'brak zdjęcia',
+                  ),
+                ),
+              ),
             Positioned(
               bottom: 0,
               left: 0,
